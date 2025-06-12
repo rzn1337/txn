@@ -1,0 +1,96 @@
+version: 2
+
+sources:
+  - name: stg
+    database: txns-462308
+    schema: stage
+    tables: 
+      - name: transactions
+      - name: customer_profiles
+      - name: merchant_profiles
+      - name: customer_accounts
+      - name: ip_intelligence
+      - name: fraud_labels
+      
+models:
+  - name: stg_customers
+    columns:
+      - name: customer_id
+        tests: [unique, not_null]
+      - name: customer_since
+      - name: date_of_birth
+      - name: gender
+      - name: income_bracket
+      - name: employment_status
+      - name: customer_segment
+      - name: kyc_status
+      - name: last_profile_update
+
+  - name: stg_accounts
+    columns:
+      - name: account_id
+        tests: [unique, not_null]
+      - name: customer_id
+        tests: [not_null]
+      - name: joint_customer_ids
+      - name: account_status
+      - name: credit_limit
+      - name: account_balance
+      - name: opening_date
+      - name: last_account_update
+
+  - name: stg_merchants
+    columns:
+      - name: merchant_id
+        tests: [unique, not_null]
+      - name: merchant_name
+      - name: merchant_category_code
+      - name: merchant_registration_country
+      - name: merchant_city
+      - name: merchant_state
+      - name: merchant_reputation_score
+      - name: is_high_risk_merchant
+      - name: last_merchant_update
+
+  - name: stg_ip_intel
+    columns:
+      - name: ip_address
+        tests: [unique, not_null]
+      - name: is_proxy
+      - name: is_tor
+      - name: country_code
+      - name: region
+      - name: city
+      - name: ip_risk_score
+      - name: last_updated
+
+  - name: stg_transactions
+    columns:
+      - name: transaction_id
+        tests: [unique, not_null]
+      - name: account_id
+      - name: customer_id
+      - name: merchant_id
+      - name: transaction_timestamp
+      - name: transaction_date
+      - name: transaction_type
+      - name: channel
+      - name: amount
+      - name: currency
+      - name: payment_method
+      - name: is_recurring
+      - name: ingestion_timestamp
+
+  # - name: stg_fraud_labels
+  #   columns:
+  #     - name: transaction_id
+  #       tests: [unique, not_null]
+  #     - name: is_fraud
+  #     - name: fraud_type
+  #     - name: investigation_status
+  #     - name: flagged_timestamp
+  #     - name: resolved_timestamp
+  #     - name: investigated_by
+  #     - name: fraud_amount
+  #     - name: recovery_amount
+  #     - name: notes

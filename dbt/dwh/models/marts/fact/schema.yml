@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: fact_transactions
+    columns:
+      - name: transaction_id
+        tests: [unique, not_null]
+      - name: date_key
+        tests: [not_null]
+      - name: time_key
+        tests: [not_null]
+      - name: customer_key
+        tests: [not_null]
+      - name: account_key
+        tests: [not_null]
+      - name: merchant_key
+        tests: [not_null]
+      - name: channel_key
+        tests: [not_null]
+      - name: location_key
+        tests: [not_null]
+      - name: payment_method_key
+        tests: [not_null]
+      - name: amount
+        tests: [not_null]
+      - name: is_recurring
+      - name: ingestion_ts
+        tests: [not_null]
+      - name: last_updated_ts
+        tests: [not_null]

@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: "Calendar dates for analysis."
+    columns:
+      - name: date_key
+        tests: [unique, not_null]
+      - name: day
+      - name: week
+      - name: month
+      - name: quarter
+      - name: year
+      - name: day_of_week
+      - name: is_weekend
+
+  - name: dim_time
+    description: "Time-of-day buckets."
+    columns:
+      - name: time_key
+        tests: [unique, not_null]
+      - name: hour
+      - name: minute
+      - name: bucket_15min
+
+  - name: dim_channel
+    description: "Transaction channels."
+    columns:
+      - name: channel_key
+        tests: [unique, not_null]
+      - name: channel_name
+        tests: [unique, not_null]
+
+  - name: dim_payment_method
+    description: "Payment methods."
+    columns:
+      - name: payment_method_key
+        tests: [unique, not_null]
+      - name: payment_method
+        tests: [unique, not_null]
+
+  - name: dim_location
+    description: "Geographic locations."
+    columns:
+      - name: location_key
+        tests: [unique, not_null]
+      - name: country_code
+      - name: state
+      - name: city
+      - name: latitude
+      - name: longitude

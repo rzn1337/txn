@@ -1,0 +1,64 @@
+version: 2
+
+models:
+  - name: dim_customer
+    columns:
+      - name: customer_id
+        tests: [not_null]
+      - name: customer_since
+      - name: kyc_status
+      - name: segment
+      - name: income_bracket
+      - name: employment_status
+      - name: gender
+      - name: birth_year
+      - name: effective_from
+        tests: [not_null]
+      - name: effective_to
+        tests: [not_null]
+      - name: current_flag
+        tests: [not_null]
+
+  - name: dim_account
+    columns:
+      - name: account_id
+        tests: [not_null]
+      - name: customer_id
+      - name: account_status
+      - name: credit_limit
+      - name: opening_date
+      - name: effective_from
+        tests: [not_null]
+      - name: effective_to
+        tests: [not_null]
+      - name: current_flag
+        tests: [not_null]
+
+  - name: dim_merchant
+    columns:
+      - name: merchant_id
+        tests: [not_null]
+      - name: category_code
+      - name: registration_country
+      - name: high_risk_flag
+      - name: reputation_score
+      - name: effective_from
+        tests: [not_null]
+      - name: effective_to
+        tests: [not_null]
+      - name: current_flag
+        tests: [not_null]
+
+  - name: dim_ip
+    columns:
+      - name: ip_address
+        tests: [not_null]
+      - name: is_proxy
+      - name: is_tor
+      - name: risk_score
+      - name: effective_from
+        tests: [not_null]
+      - name: effective_to
+        tests: [not_null]
+      - name: current_flag
+        tests: [not_null]
