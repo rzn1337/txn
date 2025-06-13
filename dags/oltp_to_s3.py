@@ -106,8 +106,7 @@ with DAG (
                     "--table", table,
                     "--key_path", "{{var.value.GCP_KEY_PATH}}",
                     "--project_id", "{{ var.value.GCP_PROJECT_ID }}",
-                    # "--run_date", "{{ ds }}"
-                    "--run_date", "2025-06-07"
+                    "--run_date", "{{ ds }}"
             ],    
             pool="bq_stream_pool",        
         )

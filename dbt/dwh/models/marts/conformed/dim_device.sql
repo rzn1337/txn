@@ -6,7 +6,7 @@ select
   user_agent
 from (
   select
-    device_id,
+    distinct(device_id),
     user_agent,
   from {{ ref('stg_transactions') }}
   where device_id is not null

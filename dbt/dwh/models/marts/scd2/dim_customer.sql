@@ -10,15 +10,9 @@ with source as (
         employment_status,
         gender,
         extract(year from date_of_birth) as birth_year,
-        last_profile_update as effective_from
+        DATE '2024-01-01' as effective_from,
+        DATE '9999-12-31' as effective_to
     from {{ ref("stg_customers") }}
-),
-
-history as (
-    select 
-        *,
-        lead(effective_from) over (partition by customer_id order by effective_from) as next_effective_from
-    from source 
 )
 
 select 
@@ -31,9 +25,9 @@ select
     gender,
     birth_year,
     effective_from,
-    coalesce(next_effective_from, timestamp('9999-12-31')) as effective_to,
-    case when next_effective_from is null then true else false end as current_flag
-from history
+    effective_to,
+    true as current_flag
+from source
 
 {% if is_incremental() %}
     where effective_from > (

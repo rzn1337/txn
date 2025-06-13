@@ -3,20 +3,18 @@
 with tx as (
     select
         transaction_id,
-        transaction_date as date_key,
-        cast(transaction_timestamp as time) as time_key,
-        customer_id,
-        account_id,
-        merchant_id,
+        transaction_date,
+        time_trunc(cast(transaction_timestamp as time), minute) as t_key,
+        customer_id as cid,
+        account_id as aid,
+        merchant_id as mid,
         channel as channel_name,
         struct(
             customer_location_country,
             customer_location_state,
-            customer_location_city,
-            transaction_location_lat,
-            transaction_location_lon) as loc,
+            customer_location_city) as loc,
         device_id,
-        customer_ip_address  as ip_address,
+        customer_ip_address,
         payment_method,
         amount,
         is_recurring
@@ -28,24 +26,24 @@ enrich as (
         t.*,
         d_date.date_key,
         d_time.time_key,
-        dc.customer_key,
-        da.account_key,
-        dm.merchant_key,
+        dc.customer_id,
+        da.account_id,
+        dm.merchant_id,
         dch.channel_key,
         dl.location_key,
         dd.device_key,
-        dip.ip_key,
+        -- dip.ip_address,
         dpm.payment_method_key,
     from tx t
-        left join {{ ref('dim_date') }}           d_date using(date_key)
-        left join {{ ref('dim_time') }}           d_time using(time_key)
-        left join {{ ref('dim_customer') }}       dc using(customer_id)
-        left join {{ ref('dim_account') }}        da using(account_id)
-        left join {{ ref('dim_merchant') }}       dm using(merchant_id)
+        left join {{ ref('dim_date') }}           d_date on t.transaction_date = d_date.date_key
+        left join {{ ref('dim_time') }}           d_time on d_time.time_key = t.t_key
+        left join {{ ref('dim_customer') }}       dc on dc.customer_id = t.cid
+        left join {{ ref('dim_account') }}        da on da.account_id = t.aid
+        left join {{ ref('dim_merchant') }}       dm on dm.merchant_id = t.mid
         left join {{ ref('dim_channel') }}        dch on dch.channel_name = t.channel_name
         left join {{ ref('dim_location') }}       dl on dl.country_code = t.loc.customer_location_country and dl.state = t.loc.customer_location_state and dl.city  = t.loc.customer_location_city
         left join {{ ref('dim_device') }}         dd on dd.device_id = t.device_id
-        left join {{ ref('dim_ip') }}             dip on dip.ip_address = t.ip_address
+        -- left join {{ ref('dim_ip') }}             dip on dip.ip_address = t.customer_ip_address
         left join {{ ref('dim_payment_method') }} dpm on dpm.payment_method = t.payment_method
 )
 
@@ -53,13 +51,13 @@ select
     transaction_id,
     date_key,
     time_key,
-    customer_key,
-    account_key,
-    merchant_key,
+    customer_id,
+    account_id,
+    merchant_id,
     channel_key,
     location_key,
     device_key,
-    ip_key,
+    -- ip_address,
     payment_method_key,
     amount,
     is_recurring,
@@ -72,8 +70,7 @@ select
     null           as velocity_1h,
     null           as device_usage_count_30d,
     null           as distinct_merchants_30d,
-    coalesce(f.flagged_timestamp, current_timestamp()) as ingestion_ts,
-    current_timestamp()          as last_updated_ts
+    coalesce(null, current_timestamp()) as ingestion_ts,
 from enrich
 
 {% if is_incremental() %}
