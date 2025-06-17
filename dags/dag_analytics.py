@@ -19,7 +19,7 @@ RUN_PHASE1 = (
 )
 
 with DAG (
-    dag_id="oltp_to_s3",
+    dag_id="analytics",
     default_args=default_args,
     start_date=datetime(2025, 6, 1),
     schedule="@hourly",

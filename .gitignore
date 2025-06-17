@@ -3,3 +3,4 @@
 *cache*
 *logs*
 **/target/
+/airflow.db

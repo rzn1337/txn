@@ -1,0 +1,12 @@
+project: txn
+provider: local
+registry: registry.db
+
+offline_store:
+  type: bigquery
+  project_id: txns-462308
+  dataset: feast_offline
+
+online_store:
+  type: redis
+  connection_string: localhost:6379
